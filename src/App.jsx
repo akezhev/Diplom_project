@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -6,6 +7,13 @@ import Home from "./components/Home";
 import Register from "./components/Register";
 import About from "./components/About";
 import Contacts from "./components/Contacts";
+=======
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Items from "./components/Items";
+import Categories from "./components/Categories";
+import ShowFullItem from "./components/ShowFullItem";
+>>>>>>> 36df7236b02d77c994298f3e3b1d645d2a87d2a3
 
 class App extends React.Component {
   constructor(props) {
@@ -144,6 +152,7 @@ class App extends React.Component {
     this.chooseCategory = this.chooseCategory.bind(this);
     this.onShowItem = this.onShowItem.bind(this);
   }
+<<<<<<< HEAD
 
   render() {
     return (
@@ -169,6 +178,30 @@ class App extends React.Component {
           <Footer />
         </div>
       </Router>
+=======
+  render() {
+    return (
+      <div className="container">
+        <Header orders={this.state.orders} onDelete={this.deleteOrder} />
+        <div className="wrapper">
+          <Categories chooseCategory={this.chooseCategory} />
+          <Items
+            onShowItem={this.onShowItem}
+            items={this.state.currentItems}
+            onAdd={this.addToOrder}
+          />
+
+          {this.state.showFullItem && (
+            <ShowFullItem
+              onAdd={this.addToOrder}
+              onShowItem={this.onShowItem}
+              item={this.state.fullItem}
+            />
+          )}
+        </div>
+        <Footer />
+      </div>
+>>>>>>> 36df7236b02d77c994298f3e3b1d645d2a87d2a3
     );
   }
 
