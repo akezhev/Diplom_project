@@ -7,6 +7,7 @@ import About from './components/About';
 import Contacts from './components/Contacts';
 import Register from './components/Register';
 import Profile from './components/Profile';
+import Checkout from './components/Checkout';
 
 class App extends Component {
   constructor(props) {
@@ -236,54 +237,82 @@ class App extends Component {
     }
   }
 
+  clearCart = () => {
+    this.setState({ orders: [] }, () => {
+      this.saveOrders();
+    });
+  }
+
   render() {
-    const totalPrice = this.state.orders.reduce((sum, order) => {
-      return sum + Number(order.price) * order.quantity;
-    }, 0);
+    const totalPrice = this.state.orders.reduce((total, item) => total + item.price * item.quantity, 0);
 
     return (
       <Router>
         <div className="container">
           <Header 
             orders={this.state.orders} 
-            onDelete={this.deleteOrder}
+            onDelete={this.deleteOrder} 
             onQuantityChange={this.handleQuantityChange}
             totalPrice={totalPrice}
             userData={this.state.userData}
-            updateUserData={this.updateUserData}
           />
           <Routes>
             <Route path="/" element={
               <Home 
                 items={this.state.currentItems}
-                showFullItem={this.state.showFullItem}
-                fullItem={this.state.fullItem}
-                chooseCategory={this.chooseCategory}
                 onShowItem={this.onShowItem}
                 onAdd={this.addToOrder}
-                favorites={this.state.favorites}
-                toggleFavorite={this.toggleFavorite}
-                userData={this.state.userData}
+                chooseCategory={this.chooseCategory}
               />
             } />
             <Route path="/about" element={<About />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/register" element={
-              <Register updateUserData={this.updateUserData} />
+              this.state.userData ? 
+                <Navigate to="/" /> : 
+                <Register updateUserData={this.updateUserData} />
             } />
             <Route path="/profile" element={
-              <Profile 
-                userData={this.state.userData}
-                orders={this.state.orders}
-                favorites={this.state.favorites}
-                toggleFavorite={this.toggleFavorite}
-                updateUserData={this.updateUserData}
-              />
+              !this.state.userData ? 
+                <Navigate to="/register" /> : 
+                <Profile 
+                  userData={this.state.userData}
+                  updateUserData={this.updateUserData}
+                  favorites={this.state.favorites}
+                  toggleFavorite={this.toggleFavorite}
+                />
             } />
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route path="/checkout" element={
+              this.state.orders.length === 0 ? 
+                <Navigate to="/" /> : 
+                <Checkout 
+                  orders={this.state.orders}
+                  totalPrice={totalPrice}
+                  clearCart={this.clearCart}
+                />
+            } />
           </Routes>
           <Footer />
         </div>
+        {this.state.showFullItem && (
+          <div className="full-item" onClick={() => this.onShowItem(this.state.fullItem)}>
+            <div onClick={e => e.stopPropagation()}>
+              <div className="full-item-content">
+                <img src={"./img/" + this.state.fullItem.img} alt={this.state.fullItem.title} />
+                <div className="item-info">
+                  <h2>{this.state.fullItem.title}</h2>
+                  <p>{this.state.fullItem.desc}</p>
+                  <div className="item-footer">
+                    <b>{Number(this.state.fullItem.price).toLocaleString()}₽</b>
+                    <div className="add-to-cart" onClick={() => this.addToOrder(this.state.fullItem)}>
+                      +
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </Router>
     );
   }
