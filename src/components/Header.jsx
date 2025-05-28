@@ -8,6 +8,7 @@ import ProfileSidebar from "./ProfileSidebar";
 export default function Header(props) {
   const [cartOpen, setCartOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [isCartAnimating, setIsCartAnimating] = useState(false);
   const cartRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,6 +35,15 @@ export default function Header(props) {
       setUserData(JSON.parse(saved));
     }
   }, []);
+
+  useEffect(() => {
+    if (totalItems > 0) {
+      setIsCartAnimating(true);
+      setTimeout(() => {
+        setIsCartAnimating(false);
+      }, 500);
+    }
+  }, [totalItems]);
 
   const handleCheckout = () => {
     setCartOpen(false);
@@ -106,7 +116,10 @@ export default function Header(props) {
             ) : (
               <Link to="/register" className="nav-link">Регистрация</Link>
             )}
-            <div className="cart-icon-container" onClick={handleCartClick}>
+            <div 
+              className={`cart-icon-container ${isCartAnimating ? 'animate' : ''}`} 
+              onClick={handleCartClick}
+            >
               <FaShoppingCart className={`shop-cart-button ${cartOpen ? "active" : ""}`} />
               {totalItems > 0 && (
                 <span className="cart-counter">{totalItems}</span>

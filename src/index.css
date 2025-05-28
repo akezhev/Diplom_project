@@ -363,20 +363,18 @@ main {
 }
 
 .add-to-cart {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
   background: var(--primary-color);
-  width: 35px;
-  height: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: transform 300ms ease, background-color 300ms ease;
+  transition: all 0.3s ease;
 }
 
-.add-to-cart svg {
-  color: var(--text-color);
-  font-size: 16px;
+.add-to-cart.animate {
+  animation: addToCartPulse 0.5s ease;
 }
 
 .add-to-cart:hover {
@@ -1738,4 +1736,69 @@ footer p {
   .checkout-container {
     margin: 20px auto;
   }
+}
+
+/* Cart Animation Styles */
+@keyframes flyToCart {
+  0% {
+    transform: scale(1) translateX(0) translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.6) translateY(-100px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0.3) translateY(-150px) translateX(300px);
+    opacity: 0;
+  }
+}
+
+@keyframes addToCartPulse {
+  0% { transform: scale(1); background: var(--primary-color); }
+  50% { transform: scale(1.2); background: #98cc33; }
+  100% { transform: scale(1); background: var(--primary-color); }
+}
+
+.cart-icon-container.animate .shop-cart-button {
+  animation: cartReceive 0.3s ease-out;
+}
+
+@keyframes cartReceive {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  75% { transform: rotate(-10deg) scale(1.2); }
+  100% { transform: scale(1) rotate(0); }
+}
+
+.add-to-cart {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.add-to-cart.animate::after {
+  content: '🛒';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: flyToCart 0.8s ease-out forwards;
+  background: var(--primary-color);
+  border-radius: 50%;
+}
+
+.add-to-cart:hover {
+  transform: scale(1.1);
+  background: #98cc33;
 }
