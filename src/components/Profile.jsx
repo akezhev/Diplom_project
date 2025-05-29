@@ -18,15 +18,27 @@ export default function Profile({ userData, orders, favorites, toggleFavorite, u
     }
   }, [navigate, userData]);
 
+  /**
+   * Обработчик отправки формы доставки
+   * @param {Event} e - Событие отправки формы
+   */
   const handleDeliverySubmit = (e) => {
     e.preventDefault();
     console.log('Оформление заказа:', deliveryInfo);
   };
 
+  /**
+   * Обработчик выхода из системы
+   * Очищает данные пользователя
+   */
   const handleLogout = () => {
     updateUserData(null);
   };
 
+  /**
+   * Отображает список заказов пользователя
+   * @returns {JSX.Element} Компонент со списком заказов
+   */
   const renderOrders = () => {
     if (orders.length === 0) {
       return (

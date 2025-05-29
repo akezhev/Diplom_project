@@ -4,6 +4,10 @@ import { FaShoppingCart } from 'react-icons/fa';
 export default function Item({ item, onShowItem, onAdd }) {
   const [isAnimating, setIsAnimating] = useState(false);
 
+  /**
+   * Обработчик добавления товара в корзину
+   * @param {Event} e - Событие клика
+   */
   const handleAddToCart = (e) => {
     e.stopPropagation();
     if (!isAnimating) {

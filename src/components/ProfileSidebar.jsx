@@ -10,10 +10,18 @@ export default function ProfileSidebar({ isOpen, onClose }) {
   const [avatar, setAvatar] = useState(userData?.avatar || null);
   const fileInputRef = useRef(null);
 
+  /**
+   * Обработчик клика по аватару
+   * Открывает диалог выбора файла
+   */
   const handleAvatarClick = () => {
     fileInputRef.current.click();
   };
 
+  /**
+   * Обработчик изменения файла аватара
+   * @param {Event} event - Событие изменения файла
+   */
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {

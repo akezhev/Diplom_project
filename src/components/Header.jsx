@@ -45,11 +45,19 @@ export default function Header(props) {
     }
   }, [totalItems]);
 
+  /**
+   * Обработчик клика по кнопке оформления заказа
+   * Закрывает корзину и перенаправляет на страницу оформления
+   */
   const handleCheckout = () => {
     setCartOpen(false);
     navigate('/checkout');
   };
 
+  /**
+   * Отображает содержимое корзины
+   * @returns {JSX.Element} Компонент с содержимым корзины
+   */
   const showOrders = () => {
     return (
       <div className="cart-popup">
@@ -87,6 +95,10 @@ export default function Header(props) {
     );
   };
 
+  /**
+   * Обработчик клика по иконке корзины
+   * Открывает/закрывает всплывающее окно корзины
+   */
   const handleCartClick = () => {
     setCartOpen(!cartOpen);
   };

@@ -177,6 +177,10 @@ class App extends Component {
     }
   }
 
+  /**
+   * Обновляет данные пользователя в состоянии и localStorage
+   * @param {Object} userData - Объект с данными пользователя
+   */
   updateUserData(userData) {
     this.setState({ userData });
     localStorage.setItem('userData', JSON.stringify(userData));
@@ -208,6 +212,10 @@ class App extends Component {
     }
   }
 
+  /**
+   * Добавляет/удаляет товар из избранного
+   * @param {Object} item - Товар для добавления/удаления из избранного
+   */
   toggleFavorite(item) {
     const { userData, favorites } = this.state;
     if (!userData) return; // Если пользователь не авторизован, ничего не делаем
@@ -227,6 +235,9 @@ class App extends Component {
     });
   }
 
+  /**
+   * Сохраняет текущие заказы пользователя в localStorage
+   */
   saveOrders() {
     const { userData, orders } = this.state;
     if (userData) {
@@ -237,6 +248,9 @@ class App extends Component {
     }
   }
 
+  /**
+   * Очищает корзину пользователя
+   */
   clearCart = () => {
     this.setState({ orders: [] }, () => {
       this.saveOrders();
@@ -332,12 +346,21 @@ class App extends Component {
     });
   }
 
+  /**
+   * Удаляет заказ из корзины по ID
+   * @param {number} id - ID заказа для удаления
+   */
   deleteOrder(id) {
     this.setState(prevState => ({
       orders: prevState.orders.filter(el => el.id !== id)
     }), () => this.saveOrders());
   }
 
+  /**
+   * Изменяет количество товара в корзине
+   * @param {number} id - ID товара
+   * @param {number} change - Величина изменения (1 или -1)
+   */
   handleQuantityChange(id, change) {
     this.setState(prevState => ({
       orders: prevState.orders.map(order => {
@@ -353,6 +376,10 @@ class App extends Component {
     }), () => this.saveOrders());
   }
 
+  /**
+   * Добавляет товар в корзину
+   * @param {Object} item - Товар для добавления в корзину
+   */
   addToOrder(item) {
     const existingOrder = this.state.orders.find(order => order.id === item.id);
     
