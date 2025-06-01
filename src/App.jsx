@@ -1,5 +1,4 @@
 import React from "react";
-<<<<<<< HEAD
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -7,13 +6,6 @@ import Home from "./components/Home";
 import Register from "./components/Register";
 import About from "./components/About";
 import Contacts from "./components/Contacts";
-=======
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import Items from "./components/Items";
-import Categories from "./components/Categories";
-import ShowFullItem from "./components/ShowFullItem";
->>>>>>> 36df7236b02d77c994298f3e3b1d645d2a87d2a3
 
 class App extends React.Component {
   constructor(props) {
@@ -141,7 +133,7 @@ class App extends React.Component {
           desc: "lorem ipsum",
           category: "white",
           price: "89.99",
-        },
+        }
       ],
       showFullItem: false,
       fullItem: {},
@@ -151,14 +143,23 @@ class App extends React.Component {
     this.deleteOrder = this.deleteOrder.bind(this);
     this.chooseCategory = this.chooseCategory.bind(this);
     this.onShowItem = this.onShowItem.bind(this);
+    this.onQuantityChange = this.onQuantityChange.bind(this);
   }
-<<<<<<< HEAD
 
   render() {
+    const totalPrice = this.state.orders.reduce((sum, order) => {
+      return sum + Number(order.price) * order.quantity;
+    }, 0);
+
     return (
       <Router>
         <div className="container">
-          <Header orders={this.state.orders} onDelete={this.deleteOrder} />
+          <Header 
+            orders={this.state.orders} 
+            onDelete={this.deleteOrder} 
+            onQuantityChange={this.onQuantityChange}
+            totalPrice={totalPrice}
+          />
           <Routes>
             <Route path="/" element={
               <Home 
@@ -178,36 +179,14 @@ class App extends React.Component {
           <Footer />
         </div>
       </Router>
-=======
-  render() {
-    return (
-      <div className="container">
-        <Header orders={this.state.orders} onDelete={this.deleteOrder} />
-        <div className="wrapper">
-          <Categories chooseCategory={this.chooseCategory} />
-          <Items
-            onShowItem={this.onShowItem}
-            items={this.state.currentItems}
-            onAdd={this.addToOrder}
-          />
-
-          {this.state.showFullItem && (
-            <ShowFullItem
-              onAdd={this.addToOrder}
-              onShowItem={this.onShowItem}
-              item={this.state.fullItem}
-            />
-          )}
-        </div>
-        <Footer />
-      </div>
->>>>>>> 36df7236b02d77c994298f3e3b1d645d2a87d2a3
     );
   }
 
   onShowItem(item) {
-    this.setState({ fullItem: item });
-    this.setState({ showFullItem: !this.state.showFullItem });
+    this.setState(prevState => ({
+      fullItem: item,
+      showFullItem: !prevState.showFullItem
+    }));
   }
 
   chooseCategory(category) {
@@ -216,22 +195,52 @@ class App extends React.Component {
       return;
     }
 
-    this.setState({
-      currentItems: this.state.items.filter((el) => el.category === category),
-    });
+    this.setState(prevState => ({
+      currentItems: prevState.items.filter((el) => el.category === category)
+    }));
   }
 
   deleteOrder(id) {
-    this.setState({ orders: this.state.orders.filter((el) => el.id !== id) });
+    this.setState(prevState => ({
+      orders: prevState.orders.filter((el) => el.id !== id)
+    }));
+  }
+
+  onQuantityChange(id, change) {
+    this.setState(prevState => ({
+      orders: prevState.orders.map(order => {
+        if (order.id === id) {
+          const newQuantity = order.quantity + change;
+          if (newQuantity < 1) {
+            return order;
+          }
+          return { ...order, quantity: newQuantity };
+        }
+        return order;
+      })
+    }));
   }
 
   addToOrder(item) {
-    let isInArray = false;
-    this.state.orders.forEach((el) => {
-      if (el.id === item.id) isInArray = true;
+    this.setState(prevState => {
+      const existingOrder = prevState.orders.find(el => el.id === item.id);
+      
+      if (existingOrder) {
+        return {
+          orders: prevState.orders.map(order => 
+            order.id === item.id 
+              ? { ...order, quantity: order.quantity + 1 }
+              : order
+          )
+        };
+      }
+      
+      return {
+        orders: [...prevState.orders, { ...item, quantity: 1 }]
+      };
     });
-    if (!isInArray) this.setState({ orders: [...this.state.orders, item] });
   }
 }
+
 export default App;
 

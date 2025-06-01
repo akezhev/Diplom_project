@@ -14,15 +14,19 @@ export default function Order({ item, onDelete, onQuantityChange }) {
             <button 
               onClick={() => onQuantityChange(item.id, -1)}
               disabled={item.quantity <= 1}
+              className="quantity-button"
             >
               <FaMinus />
             </button>
-            <span>{item.quantity}</span>
-            <button onClick={() => onQuantityChange(item.id, 1)}>
+            <span className="quantity">{item.quantity}</span>
+            <button 
+              onClick={() => onQuantityChange(item.id, 1)}
+              className="quantity-button"
+            >
               <FaPlus />
             </button>
           </div>
-          <p className="price">{(item.price * item.quantity).toLocaleString()}₽</p>
+          <p className="price">{(Number(item.price) * item.quantity).toLocaleString()}₽</p>
         </div>
       </div>
       <button 

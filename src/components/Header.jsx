@@ -5,7 +5,7 @@ import { FaShoppingCart, FaUser, FaTimes } from "react-icons/fa";
 import Order from "./Order";
 import ProfileSidebar from "./ProfileSidebar";
 
-export default function Header(props) {
+export default function Header({ orders, onDelete, onQuantityChange, totalPrice }) {
   const [cartOpen, setCartOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [isCartAnimating, setIsCartAnimating] = useState(false);
@@ -14,7 +14,7 @@ export default function Header(props) {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
 
-  const totalItems = props.orders.reduce((sum, order) => sum + order.quantity, 0);
+  const totalItems = orders.reduce((sum, order) => sum + order.quantity, 0);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -67,20 +67,20 @@ export default function Header(props) {
             <FaTimes />
           </button>
         </div>
-        {props.orders.length > 0 ? (
+        {orders.length > 0 ? (
           <>
             <div className="orders">
-              {props.orders.map(el => (
+              {orders.map(el => (
                 <Order 
                   key={el.id} 
                   item={el} 
-                  onDelete={props.onDelete}
-                  onQuantityChange={props.onQuantityChange}
+                  onDelete={onDelete}
+                  onQuantityChange={onQuantityChange}
                 />
               ))}
             </div>
             <div className="cart-summary">
-              <p className="summa">Итого: {props.totalPrice.toLocaleString()}₽</p>
+              <p className="summa">Итого: {totalPrice.toLocaleString()}₽</p>
               <button className="checkout-button" onClick={handleCheckout}>
                 Оформить заказ
               </button>
@@ -93,14 +93,6 @@ export default function Header(props) {
         )}
       </div>
     );
-  };
-
-  /**
-   * Обработчик клика по иконке корзины
-   * Открывает/закрывает всплывающее окно корзины
-   */
-  const handleCartClick = () => {
-    setCartOpen(!cartOpen);
   };
 
   return (
@@ -130,7 +122,7 @@ export default function Header(props) {
             )}
             <div 
               className={`cart-icon-container ${isCartAnimating ? 'animate' : ''}`} 
-              onClick={handleCartClick}
+              onClick={() => setCartOpen(!cartOpen)}
             >
               <FaShoppingCart className={`shop-cart-button ${cartOpen ? "active" : ""}`} />
               {totalItems > 0 && (
